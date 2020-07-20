@@ -1,3 +1,9 @@
+/**
+discard all data
+*/
+
+
+
 #include <stdio.h>
 
 #ifndef _WIN32
@@ -18,7 +24,8 @@ void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int
 	char str[INET_ADDRSTRLEN] = { 0 };
 	auto sin = (sockaddr_in*)addr;
 	inet_ntop(AF_INET, &sin->sin_addr, str, INET_ADDRSTRLEN);
-	printf("accpet TCP connection from: %s\n", str);
+	printf("accpet TCP connection from: %s:%d\n", str, sin->sin_port);
+	evutil_closesocket(fd);
 }
 
 void accpet_error_cb(evconnlistener* listener, void* context)
@@ -36,7 +43,7 @@ int main(int argc, char** argv)
 	WSAStartup(0x0201, &wsa_data);
 #endif
 
-	int port = 8000;
+	int port = 18000;
 	if (argc > 1) {
 		port = atoi(argv[1]);
 	}
