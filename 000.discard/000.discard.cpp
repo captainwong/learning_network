@@ -1,10 +1,10 @@
 /**
-discard all data
+Discard Protocol
+RFC 863
 */
 
 
 
-#include <stdio.h>
 
 #ifndef _WIN32
 #include <netinet/in.h>
@@ -13,9 +13,13 @@ discard all data
 # endif
 #include <sys/socket.h>
 #else
+# ifndef  _CRT_SECURE_NO_WARNINGS
+#  define  _CRT_SECURE_NO_WARNINGS
+# endif
 #include <WinSock2.h>
 #endif
 
+#include <stdio.h>
 #include <event2/listener.h>
 
 
@@ -25,7 +29,9 @@ void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int
 	auto sin = (sockaddr_in*)addr;
 	inet_ntop(AF_INET, &sin->sin_addr, str, INET_ADDRSTRLEN);
 	printf("accpet TCP connection from: %s:%d\n", str, sin->sin_port);
+
 	evutil_closesocket(fd);
+	//shutdown(fd, 2);
 }
 
 void accpet_error_cb(evconnlistener* listener, void* context)
@@ -36,17 +42,14 @@ void accpet_error_cb(evconnlistener* listener, void* context)
 	event_base_loopexit(base, nullptr);
 }
 
-int main(int argc, char** argv)
+int main()
 {
 #ifdef _WIN32
 	WSADATA wsa_data;
 	WSAStartup(0x0201, &wsa_data);
 #endif
 
-	int port = 18000;
-	if (argc > 1) {
-		port = atoi(argv[1]);
-	}
+	int port = 10009;
 
 	sockaddr_in sin = { 0 };
 	sin.sin_family = AF_INET;
