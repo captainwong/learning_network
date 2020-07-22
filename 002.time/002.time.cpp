@@ -1,8 +1,7 @@
 /**
-Discard Protocol
-RFC 863
+Time Protocol
+RFC 868
 */
-
 
 
 
@@ -22,7 +21,33 @@ RFC 863
 
 #include <stdio.h>
 #include <event2/listener.h>
+#include <event2/buffer.h>
+#include <event2/bufferevent.h>
 
+void writecb(struct bufferevent* bev, void* user_data)
+{
+	printf("writecb\n");
+	if (evbuffer_get_length(bufferevent_get_output(bev)) == 0) {
+		printf("flushed time\n");
+		bufferevent_free(bev);
+		//shutdown(bufferevent_getfd(bev), 2);
+	}
+}
+
+void eventcb(struct bufferevent* bev, short events, void* user_data)
+{
+	printf("eventcb events=%04X\n", events);
+	if (events & BEV_EVENT_ERROR) {
+		printf("Got an error on the connection: %s\n",
+			   strerror(errno));/*XXX win32*/
+	} else if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
+		printf("Connection closed.\n");
+	}
+	/* None of the other events can happen here, since we haven't enabled
+		* timeouts */
+
+	bufferevent_free(bev);
+}
 
 void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int socklen, void* context)
 {
@@ -31,8 +56,19 @@ void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int
 	inet_ntop(AF_INET, &sin->sin_addr, str, INET_ADDRSTRLEN);
 	printf("accpet TCP connection from: %s:%d\n", str, sin->sin_port);
 
-	evutil_closesocket(fd);
-	//shutdown(fd, 2);
+	auto base = evconnlistener_get_base(listener);
+	auto bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+	if (!bev) {
+		fprintf(stderr, "Error constructing bufferevent!\n");
+		event_base_loopbreak(base);
+		return;
+	}
+
+	bufferevent_setcb(bev, nullptr, writecb, eventcb, nullptr);
+	bufferevent_enable(bev, EV_WRITE);
+
+	uint32_t ut = htonl(time(nullptr) & 0xFFFFFFFF) & 0xFFFFFFFF;
+	bufferevent_write(bev, &ut, 4);	
 }
 
 void accpet_error_cb(evconnlistener* listener, void* context)
@@ -43,14 +79,14 @@ void accpet_error_cb(evconnlistener* listener, void* context)
 	event_base_loopexit(base, nullptr);
 }
 
-int main()
+int main(int argc, char** argv)
 {
 #ifdef _WIN32
 	WSADATA wsa_data;
 	WSAStartup(0x0201, &wsa_data);
 #endif
 
-	int port = 10009;
+	int port = 10037;
 
 	sockaddr_in sin = { 0 };
 	sin.sin_family = AF_INET;
@@ -63,12 +99,12 @@ int main()
 		return -1;
 	}
 
-	auto listener = evconnlistener_new_bind(base, 
-											accept_cb, 
-											nullptr, 
-											LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, 
+	auto listener = evconnlistener_new_bind(base,
+											accept_cb,
+											nullptr,
+											LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE,
 											-1, // backlog, -1 for default
-											(sockaddr*)(&sin), 
+											(sockaddr*)(&sin),
 											sizeof(sin));
 
 	if (!listener) {

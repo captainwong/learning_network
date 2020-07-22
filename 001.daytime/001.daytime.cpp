@@ -16,6 +16,7 @@ RFC 867
 #  define  _CRT_SECURE_NO_WARNINGS
 # endif
 #include <WinSock2.h>
+#pragma comment(lib, "ws2_32.lib")
 #endif
 
 #include <stdio.h>
