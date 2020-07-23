@@ -21,6 +21,7 @@ RFC 868
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 
 int main(int argc, char** argv)
 {
