@@ -10,6 +10,9 @@ CFLAGS+=`pkg-config --cflags --libs libevent`
 name=000.discard
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
+name=000.discard_client
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
 name=001.daytime
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
