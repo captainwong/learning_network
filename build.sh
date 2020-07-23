@@ -6,18 +6,18 @@ cd build
 CC=g++
 CFLAGS=`pkg-config --cflags --libs libevent`
 
-$name=000.discard
+name=000.discard
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
 
-$name=001.daytime
+name=001.daytime
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
 
-$name=002.time
+name=002.time
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
 
-$name=002.time_client
+name=002.time_client
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
