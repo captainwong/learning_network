@@ -1,6 +1,39 @@
 /**
 Discard Protocol
 RFC 863
+
+Network Working Group                                          J. Postel
+Request for Comments: 863                                            ISI
+																May 1983
+
+
+
+							Discard Protocol
+
+
+
+
+This RFC specifies a standard for the ARPA Internet community.  Hosts on
+the ARPA Internet that choose to implement a Discard Protocol are
+expected to adopt and implement this standard.
+
+A useful debugging and measurement tool is a discard service.  A discard
+service simply throws away any data it receives.
+
+TCP Based Discard Service
+
+   One discard service is defined as a connection based application on
+   TCP.  A server listens for TCP connections on TCP port 9.  Once a
+   connection is established any data received is thrown away.  No
+   response is sent.  This continues until the calling user terminates
+   the connection.
+
+UDP Based Discard Service
+
+   Another discard service is defined as a datagram based application on
+   UDP.  A server listens for UDP datagrams on UDP port 9.  When a
+   datagram is received, it is thrown away.  No response is sent.
+
 */
 
 #ifndef _WIN32
@@ -19,7 +52,31 @@ RFC 863
 #include <errno.h>
 #include <string.h>
 #include <event2/listener.h>
+#include <event2/buffer.h>
+#include <event2/bufferevent.h>
 
+
+void readcb(struct bufferevent* bev, void* user_data)
+{
+	printf("readcb\n");
+	auto input = bufferevent_get_input(bev);
+	evbuffer_drain(input, evbuffer_get_length(input));
+}
+
+void eventcb(struct bufferevent* bev, short events, void* user_data)
+{
+	printf("eventcb events=%04X\n", events);
+	if (events & BEV_EVENT_ERROR) {
+		printf("Got an error on the connection: %s\n",
+			   strerror(errno));/*XXX win32*/
+	} else if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
+		printf("Connection closed.\n");
+	}
+	/* None of the other events can happen here, since we haven't enabled
+		* timeouts */
+
+	bufferevent_free(bev);
+}
 
 void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int socklen, void* context)
 {
@@ -28,8 +85,19 @@ void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int
 	inet_ntop(AF_INET, &sin->sin_addr, str, INET_ADDRSTRLEN);
 	printf("accpet TCP connection from: %s:%d\n", str, sin->sin_port);
 
-	evutil_closesocket(fd);
+	//evutil_closesocket(fd);
 	//shutdown(fd, 2);
+
+	auto base = evconnlistener_get_base(listener);
+	auto bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+	if (!bev) {
+		fprintf(stderr, "Error constructing bufferevent!\n");
+		event_base_loopbreak(base);
+		return;
+	}
+
+	bufferevent_setcb(bev, readcb, nullptr, eventcb, nullptr);
+	bufferevent_enable(bev, EV_READ);
 }
 
 void accpet_error_cb(evconnlistener* listener, void* context)
