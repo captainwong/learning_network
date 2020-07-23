@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 
 	auto ip = argv[1];
 	int port = 10037;
-	if (argc > 3) {
+	if (argc > 2) {
 		port = atoi(argv[2]);
 		if (port <= 0 || port > 65535) {
 			puts("Invalid port");

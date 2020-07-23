@@ -47,16 +47,24 @@ UDP Based Discard Service
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdint.h>
 #include <event2/listener.h>
 #include <event2/buffer.h>
 #include <event2/bufferevent.h>
+#include <chrono>
 
+int64_t bytes_recvd = 0;
+int64_t msges_recvd = 0;
+int64_t last_time_bytes_recvd = 0;
+std::chrono::steady_clock::time_point last_time_checked = {};
 
 void readcb(struct bufferevent* bev, void* user_data)
 {
-	printf("readcb\n");
 	auto input = bufferevent_get_input(bev);
-	evbuffer_drain(input, evbuffer_get_length(input));
+	int len = evbuffer_get_length(input);
+	evbuffer_drain(input, len);
+	bytes_recvd += len;
+	msges_recvd++;
 }
 
 void eventcb(struct bufferevent* bev, short events, void* user_data)
@@ -72,6 +80,22 @@ void eventcb(struct bufferevent* bev, short events, void* user_data)
 		* timeouts */
 
 	bufferevent_free(bev);
+}
+
+void timer_cb(evutil_socket_t fd, short what, void* arg)
+{
+	auto now = std::chrono::steady_clock::now();
+	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_time_checked).count();
+	auto bytes = bytes_recvd - last_time_bytes_recvd;
+	//if (msges_recvd == 0) { msges_recvd = 1; }
+	printf("%4.3f MiB/s %4.3f Ki Msgs/s %6.2f bytes per msg\n",
+		   double(bytes * 1000 / ms / 1024 / 1024),
+		   double(msges_recvd * 1000 / ms / 1024),
+		   double(bytes) / double(msges_recvd));
+
+	last_time_bytes_recvd = bytes_recvd;
+	msges_recvd = 0;
+	last_time_checked = now;
 }
 
 void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int socklen, void* context)
@@ -131,15 +155,22 @@ int main(int argc, char** argv)
 											-1, // backlog, -1 for default
 											(sockaddr*)(&sin), 
 											sizeof(sin));
-
 	if (!listener) {
 		fprintf(stderr, "create listener failed\n");
 		return -1;
 	}
-
 	printf("%s is listening on port %d\n", argv[0], port);
-
 	evconnlistener_set_error_cb(listener, accpet_error_cb);
+
+	last_time_checked = std::chrono::steady_clock::now();
+	auto timer = event_new(base, -1, EV_PERSIST, timer_cb, nullptr);
+	if (!timer) {
+		fprintf(stderr, "create timer failed\n");
+		return -1;
+	}
+	struct timeval three_sec = { 3, 0 };
+	event_add(timer, &three_sec);
+
 	event_base_dispatch(base);
 
 	return 0;
