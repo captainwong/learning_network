@@ -19,5 +19,8 @@ $CC ../${name}/${name}.cpp $CFLAGS -o $name
 name=002.time_client
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
+name=002.time_client_libevent
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
 name=003.echo
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
