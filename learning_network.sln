@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "002.time", "002.time\002.ti
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "002.time_client", "002.time_client\002.time_client.vcxproj", "{A4C30789-AF5E-454C-AE86-34C24487F03C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "003.echo", "003.echo\003.echo.vcxproj", "{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{A4C30789-AF5E-454C-AE86-34C24487F03C}.Release|x64.Build.0 = Release|x64
 		{A4C30789-AF5E-454C-AE86-34C24487F03C}.Release|x86.ActiveCfg = Release|Win32
 		{A4C30789-AF5E-454C-AE86-34C24487F03C}.Release|x86.Build.0 = Release|Win32
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Debug|x64.ActiveCfg = Debug|x64
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Debug|x64.Build.0 = Debug|x64
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Debug|x86.Build.0 = Debug|Win32
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Release|x64.ActiveCfg = Release|x64
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Release|x64.Build.0 = Release|x64
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Release|x86.ActiveCfg = Release|Win32
+		{C5272106-C6CC-4AC6-AF86-CFFA65C36C3C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
