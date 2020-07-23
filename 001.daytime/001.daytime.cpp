@@ -21,6 +21,7 @@ RFC 867
 
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 #include <event2/listener.h>
 #include <event2/buffer.h>
 #include <event2/bufferevent.h>
