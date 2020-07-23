@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{83de22db-7010-442c-bdf7-60e60575fc5f}</ProjectGuid>
-    <RootNamespace>My002time</RootNamespace>
+    <ProjectGuid>{d1b50602-7272-4bcd-a572-56b4e36bb5dc}</ProjectGuid>
+    <RootNamespace>My002timeclientlibevent</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -142,7 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="002.time.cpp" />
+    <ClCompile Include="002.time_client_libevent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
