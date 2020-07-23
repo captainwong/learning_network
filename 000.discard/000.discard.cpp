@@ -45,7 +45,7 @@ void accpet_error_cb(evconnlistener* listener, void* context)
 	event_base_loopexit(base, nullptr);
 }
 
-int main()
+int main(int argc, char** argv)
 {
 #ifdef _WIN32
 	WSADATA wsa_data;
@@ -77,6 +77,8 @@ int main()
 		fprintf(stderr, "create listener failed\n");
 		return -1;
 	}
+
+	printf("%s is listening on port %d\n", argv[0], port);
 
 	evconnlistener_set_error_cb(listener, accpet_error_cb);
 	event_base_dispatch(base);
