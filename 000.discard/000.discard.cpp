@@ -89,8 +89,8 @@ void timer_cb(evutil_socket_t fd, short what, void* arg)
 	auto bytes = bytes_recvd - last_time_bytes_recvd;
 	//if (msges_recvd == 0) { msges_recvd = 1; }
 	printf("%4.3f MiB/s %4.3f Ki Msgs/s %6.2f bytes per msg\n",
-		   double(bytes * 1000 / ms / 1024 / 1024),
-		   double(msges_recvd * 1000 / ms / 1024),
+		   double(bytes * 1000.0 / ms / 1024 / 1024),
+		   double(msges_recvd * 1000.0 / ms / 1024),
 		   double(bytes) / double(msges_recvd));
 
 	last_time_bytes_recvd = bytes_recvd;
