@@ -4,7 +4,7 @@ mkdir -p build
 cd build
 
 CC=g++
-CFLAGS='-std=c++11'
+CFLAGS='-std=c++11 '
 CFLAGS+=`pkg-config --cflags --libs libevent`
 
 name=000.discard
