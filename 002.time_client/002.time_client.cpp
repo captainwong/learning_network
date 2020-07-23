@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 	}
 
 	time_t t = ntohl(*(uint32_t*)(buff));
-	printf(asctime(localtime(&t)));
+	printf("%s", asctime(localtime(&t)));
 	close(fd);
 
 	return 0;
