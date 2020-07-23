@@ -139,7 +139,6 @@ int main(int argc, char** argv)
 	auto bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
 	if (!bev) {
 		fprintf(stderr, "allocate bufferevent failed\n");
-		event_base_free(base);
 		return 1;
 	}
 	bufferevent_setcb(bev, readcb, nullptr, eventcb, nullptr);
@@ -147,8 +146,6 @@ int main(int argc, char** argv)
 
 	if (bufferevent_socket_connect(bev, (sockaddr*)(&sin), sizeof(sin)) < 0) {
 		fprintf(stderr, "error starting connection\n");		
-		bufferevent_free(bev);
-		event_base_free(base);
 		return -1;
 	}
 	
