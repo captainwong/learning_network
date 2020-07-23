@@ -20,6 +20,7 @@ RFC 868
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <time.h>
 
 int main(int argc, char** argv)
 {
