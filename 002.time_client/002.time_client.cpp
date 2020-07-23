@@ -9,6 +9,7 @@ RFC 868
 #  include <arpa/inet.h>
 # endif
 #include <sys/socket.h>
+#include <unistd.h>
 #else
 # ifndef  _CRT_SECURE_NO_WARNINGS
 #  define  _CRT_SECURE_NO_WARNINGS
