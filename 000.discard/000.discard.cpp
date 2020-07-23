@@ -21,6 +21,7 @@ RFC 863
 #endif
 
 #include <stdio.h>
+#include <errno.h>
 #include <event2/listener.h>
 
 
