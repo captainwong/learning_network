@@ -3,13 +3,9 @@ Daytime Protocol
 RFC 867
 */
 
-
-
 #ifndef _WIN32
 #include <netinet/in.h>
-# ifdef _XOPEN_SOURCE_EXTENDED
-#  include <arpa/inet.h>
-# endif
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #else
 # ifndef  _CRT_SECURE_NO_WARNINGS

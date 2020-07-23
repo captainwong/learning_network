@@ -5,9 +5,7 @@ RFC 868
 
 #ifndef _WIN32
 #include <netinet/in.h>
-# ifdef _XOPEN_SOURCE_EXTENDED
-#  include <arpa/inet.h>
-# endif
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #else
