@@ -27,3 +27,7 @@ $CC ../${name}/${name}.cpp $CFLAGS -o $name
 
 name=003.echo
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
+name=004.chargen
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
