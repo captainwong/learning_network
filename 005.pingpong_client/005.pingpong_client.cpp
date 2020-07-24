@@ -32,6 +32,10 @@ int session_count = 0;
 int session_connected = 0;
 int timeout = 0;
 
+int64_t totalBytesRead = 0;
+int64_t totalBytesWrite = 0;
+int64_t totalMsgRead = 0;
+
 struct Session {
 	int id = 0;
 	int64_t bytesRead = 0;
@@ -41,25 +45,27 @@ struct Session {
 
 void readcb(struct bufferevent* bev, void* user_data)
 {
-	evbuffer_add_buffer(bufferevent_get_output(bev), bufferevent_get_input(bev));
+	auto input = bufferevent_get_input(bev);
+	auto session = (Session*)user_data;
+	int len = evbuffer_get_length(input);
+	session->bytesRead += len;
+	session->bytesWritten += len;
+	session->msgRead++;
+	evbuffer_add_buffer(bufferevent_get_output(bev), input);
 }
 
 void timer_cb(evutil_socket_t fd, short what, void* arg)
 {
-	printf("timeout\n");
-	/*
-	auto now = std::chrono::steady_clock::now();
-	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_time_checked).count();
-	printf("%4.3f MiB/s\n",
-		   double(bytes_sent * 1000.0 / ms / 1024 / 1024));
-
-	bytes_sent = 0;
-	last_time_checked = now;*/
+	auto bev = (bufferevent*)arg;
+	Session* session = nullptr;
+	bufferevent_getcb(bev, nullptr, nullptr, nullptr, (void**)&session);
+	printf("client #%d timeout\n", session->id);
 
 	//auto bev = (bufferevent*)arg;
 	//bufferevent_free(bev);
 	//evutil_closesocket(fd);
 
+	bufferevent_disable(bev, EV_WRITE);
 	// SHUT_WR
 	shutdown(fd, 1);
 }
@@ -67,7 +73,7 @@ void timer_cb(evutil_socket_t fd, short what, void* arg)
 void eventcb(struct bufferevent* bev, short events, void* user_data)
 {
 	auto session = (Session*)user_data;
-	printf("eventcb events=%04X\n", events);
+	printf("eventcb #%d events=%04X\n", session->id, events);
 	if (events & BEV_EVENT_CONNECTED) {
 		printf("client #%d connected\n", session->id);
 		if (++session_connected == session_count) {
@@ -93,7 +99,20 @@ void eventcb(struct bufferevent* bev, short events, void* user_data)
 	/* None of the other events can happen here, since we haven't enabled
 		* timeouts */
 
+	totalBytesRead += session->bytesRead;
+	totalBytesWrite += session->bytesWritten;
+	totalMsgRead += session->msgRead;
 	delete session;
+
+	if (--session_connected == 0) {
+		printf("All disconnected\n");
+		printf("Read %.2f MiB, Write %.2f MiB, Average msg size is %.2f bytes, Throughput is %.2f MiB/s\n",
+			   totalBytesRead / 1024.0 / 1024, 
+			   totalBytesWrite / 1024.0 / 1024, 
+			   totalBytesRead * 1.0 / totalMsgRead, 
+			   totalBytesRead * 1.0 / (timeout * 1024.0 * 1024));
+	}
+
 	bufferevent_free(bev);
 }
 
@@ -136,6 +155,9 @@ int main(int argc, char** argv)
 		puts("Invalid timeout");
 		return 1;
 	}
+
+	printf("starting pingpong to %s:%d with %d sessions, block_size=%d bytes, timeout=%ds\n",
+		   ip, port, session_count, block_size, timeout);
 
 	sockaddr_in sin = { 0 };
 	sin.sin_family = AF_INET;
