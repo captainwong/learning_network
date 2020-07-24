@@ -31,3 +31,8 @@ $CC ../${name}/${name}.cpp $CFLAGS -o $name
 name=004.chargen
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
 
+name=005.pingpong
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
+name=005.pingpong_client
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
