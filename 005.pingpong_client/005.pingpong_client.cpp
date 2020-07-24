@@ -28,6 +28,8 @@ Ping Pong Client
 
 char* block = nullptr;
 int block_size = 0;
+int session_count = 0;
+int session_connected = 0;
 
 void readcb(struct bufferevent* bev, void* user_data)
 {
@@ -39,6 +41,9 @@ void eventcb(struct bufferevent* bev, short events, void* user_data)
 	printf("eventcb events=%04X\n", events);
 	if (events & BEV_EVENT_CONNECTED) {
 		printf("connected\n");
+		if (++session_connected == session_count) {
+			printf("All connected\n");
+		}
 		bufferevent_write(bev, block, block_size);
 		return;
 	} else if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
@@ -60,8 +65,8 @@ int main(int argc, char** argv)
 	WSAStartup(0x0201, &wsa_data);
 #endif
 
-	if (argc < 4) {
-		printf("Usage: %s ip port block_size\n", argv[0]);
+	if (argc < 5) {
+		printf("Usage: %s ip port session_count block_size\n", argv[0]);
 		return 1;
 	}
 
@@ -71,7 +76,12 @@ int main(int argc, char** argv)
 		puts("Invalid port");
 		return 1;
 	}
-	block_size = atoi(argv[3]);
+	session_count = atoi(argv[3]);
+	if (session_count <= 0) {
+		puts("Invalid port");
+		return 1;
+	}
+	block_size = atoi(argv[4]);
 	if (block_size <= 0) {
 		puts("Invalid block_size");
 		return 1;
@@ -93,17 +103,19 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	auto bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-	if (!bev) {
-		fprintf(stderr, "allocate bufferevent failed\n");
-		return 1;
-	}
-	bufferevent_setcb(bev, readcb, nullptr, eventcb, nullptr);
-	bufferevent_enable(bev, EV_READ);
+	for (int i = 0; i < session_count; i++) {
+		auto bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
+		if (!bev) {
+			fprintf(stderr, "allocate bufferevent failed\n");
+			return 1;
+		}
+		bufferevent_setcb(bev, readcb, nullptr, eventcb, nullptr);
+		bufferevent_enable(bev, EV_READ);
 
-	if (bufferevent_socket_connect(bev, (sockaddr*)(&sin), sizeof(sin)) < 0) {
-		fprintf(stderr, "error starting connection\n");
-		return -1;
+		if (bufferevent_socket_connect(bev, (sockaddr*)(&sin), sizeof(sin)) < 0) {
+			fprintf(stderr, "error starting connection\n");
+			return -1;
+		}
 	}
 
 	event_base_dispatch(base);
