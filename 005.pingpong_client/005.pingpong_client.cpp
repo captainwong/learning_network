@@ -26,6 +26,10 @@ Ping Pong Client
 #include <event2/buffer.h>
 #include <event2/bufferevent.h>
 
+#if !defined(LIBEVENT_VERSION_NUMBER) || LIBEVENT_VERSION_NUMBER < 0x02010100
+#error "This version of Libevent is not supported; Get 2.1.1-alpha or later."
+#endif
+
 char* block = nullptr;
 int block_size = 0;
 int session_count = 0;
