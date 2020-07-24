@@ -1,6 +1,7 @@
 /**
 Echo Server
 no codec, just flush all msg to other clients
+test it with netcat or telnet
 */
 
 #ifndef _WIN32
