@@ -87,6 +87,7 @@ int main(int argc, char** argv)
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	sin.sin_port = htons(port);
 
+	printf("using libevent %s\n", event_get_version());
 	auto base = event_base_new();
 	if (!base) {
 		fprintf(stderr, "init libevent failed\n");
