@@ -156,6 +156,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	printf("using libevent %s\n", event_get_version());
 	printf("starting pingpong to %s:%d with %d sessions, block_size=%d bytes, timeout=%ds\n",
 		   ip, port, session_count, block_size, timeout);
 
