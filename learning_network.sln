@@ -25,6 +25,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "005.pingpong_client", "005.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "006.chat", "006.chat\006.chat.vcxproj", "{4A96F622-57EC-4DEE-A61B-6E0B59183006}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "007.chat_with_codec", "007.chat_with_codec\007.chat_with_codec.vcxproj", "{6859E311-E7FD-41B0-A7FB-056F1FB76280}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "007.chat_with_codec_client", "007.chat_with_codec_client\007.chat_with_codec_client.vcxproj", "{08006F22-2FBD-42C6-831F-A211A32F7835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -121,6 +125,22 @@ Global
 		{4A96F622-57EC-4DEE-A61B-6E0B59183006}.Release|x64.Build.0 = Release|x64
 		{4A96F622-57EC-4DEE-A61B-6E0B59183006}.Release|x86.ActiveCfg = Release|Win32
 		{4A96F622-57EC-4DEE-A61B-6E0B59183006}.Release|x86.Build.0 = Release|Win32
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Debug|x64.ActiveCfg = Debug|x64
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Debug|x64.Build.0 = Debug|x64
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Debug|x86.ActiveCfg = Debug|Win32
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Debug|x86.Build.0 = Debug|Win32
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Release|x64.ActiveCfg = Release|x64
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Release|x64.Build.0 = Release|x64
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Release|x86.ActiveCfg = Release|Win32
+		{6859E311-E7FD-41B0-A7FB-056F1FB76280}.Release|x86.Build.0 = Release|Win32
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Debug|x64.ActiveCfg = Debug|x64
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Debug|x64.Build.0 = Debug|x64
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Debug|x86.ActiveCfg = Debug|Win32
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Debug|x86.Build.0 = Debug|Win32
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Release|x64.ActiveCfg = Release|x64
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Release|x64.Build.0 = Release|x64
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Release|x86.ActiveCfg = Release|Win32
+		{08006F22-2FBD-42C6-831F-A211A32F7835}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
