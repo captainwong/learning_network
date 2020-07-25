@@ -36,3 +36,12 @@ $CC ../${name}/${name}.cpp $CFLAGS -o $name
 
 name=005.pingpong_client
 $CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
+name=006.chat
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
+name=007.chat_with_codec
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
+
+name=007.chat_with_codec_client
+$CC ../${name}/${name}.cpp $CFLAGS -o $name 
