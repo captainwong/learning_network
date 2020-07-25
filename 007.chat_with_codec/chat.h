@@ -38,7 +38,7 @@ struct MsgHeader {
 	MsgType type = MsgType::join;
 };
 
-static constexpr int MSG_HEADER_LEN = sizeof MsgHeader;
+static constexpr int MSG_HEADER_LEN = sizeof(MsgHeader);
 
 struct Msg {
 	MsgHeader header = {};
