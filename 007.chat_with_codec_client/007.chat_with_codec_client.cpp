@@ -27,12 +27,127 @@ Ping Pong Client
 #include <event2/bufferevent.h>
 
 #include "../007.chat_with_codec/chat.h"
+#include <unordered_map>
 
 #if !defined(LIBEVENT_VERSION_NUMBER) || LIBEVENT_VERSION_NUMBER < 0x02010100
 #error "This version of Libevent is not supported; Get 2.1.1-alpha or later."
 #endif
 
 Client me = {};
+
+typedef void(*command_func)(const char* data, int len);
+std::unordered_map<std::string, command_func> command_funcs = {};
+
+#define ADD_COMMAND_FUNC(func_name) command_funcs[#func_name] = func_name;
+
+void help(const char* data, int len)
+{
+	printf("Commands are:\n"
+		   "  help        Show commands\n"
+		   "  rooms       Get rooms list\n"
+		   "  room        Get room info by id\n"
+		   "  join        Join a room by id\n"
+		   "  leave       Leave current room\n"
+		   "  broadcast   Send a message to all online users\n"
+		   "  groupcast   Send a message to all users in current room\n"
+		   "  chat        Send a message to user by id\n"
+		   "  quit        Quit\n");
+}
+
+void rooms(const char* data, int len)
+{
+	MsgHeader msg;
+	msg.len = 0;
+	msg.type = MsgType::rooms;
+	auto output = bufferevent_get_output(me.bev);
+	evbuffer_add(output, &msg, MSG_HEADER_LEN);
+}
+
+void room(const char* data, int len)
+{
+	int room_id = 0;
+	if (sscanf(data, "room %d ", &room_id) != 1) {
+
+	}
+}
+
+void join(const char* data, int len)
+{
+
+}
+
+void leave(const char* data, int len)
+{
+
+}
+
+void broadcast(const char* data, int len)
+{
+
+}
+
+void groupcast(const char* data, int len)
+{
+
+}
+
+void chat(const char* data, int len)
+{
+
+}
+
+void quit(const char* data, int len)
+{
+
+}
+
+void init_command_funcs()
+{
+	ADD_COMMAND_FUNC(help);
+	ADD_COMMAND_FUNC(rooms);
+	ADD_COMMAND_FUNC(room);
+	ADD_COMMAND_FUNC(join);
+	ADD_COMMAND_FUNC(leave);
+	ADD_COMMAND_FUNC(broadcast);
+	ADD_COMMAND_FUNC(groupcast);
+	ADD_COMMAND_FUNC(chat);
+	ADD_COMMAND_FUNC(quit);
+}
+
+void handle_input(bufferevent* bev)
+{
+	
+	printf("Input command:");
+	char cmd[4096];
+	int buflen = sizeof(cmd);
+	char* p = cmd;
+	int pos = 0;
+	char c = 0;
+	while ((c = getchar()) != EOF) {
+		if (pos == buflen) {
+			buflen *= 2;
+			auto newp = new char[buflen];
+			memcpy(newp, p, pos);
+			if (p != cmd) {
+				delete[] p;
+			}
+			p = newp;
+		}
+		p[pos++] = c;
+	}
+
+	const char* commands[] = { "help", "rooms", "room", "join", "leave", "broadcast", "groupcast", "chat", nullptr };
+	for (auto command : commands) {
+		if (!command) { break; }
+		if (strstr(p, command)) {
+			command_funcs[command](p, pos);
+		}
+	}
+
+	if (p != cmd) {
+		delete[] p;
+	}
+}
 
 void handle_msg(bufferevent* bev, Msg* msg)
 {
@@ -51,19 +166,11 @@ void handle_msg(bufferevent* bev, Msg* msg)
 		}
 		break;
 	}
-	case MsgType::query_all_live_rooms:
-		break;
 	case MsgType::rooms:
-		break;
-	case MsgType::get_room_info:
 		break;
 	case MsgType::room:
 		break;
-	case MsgType::join:
-		break;
 	case MsgType::joined:
-		break;
-	case MsgType::leave:
 		break;
 	case MsgType::leaved:
 		break;
@@ -92,6 +199,9 @@ void readcb(struct bufferevent* bev, void* user_data)
 			evbuffer_drain(input, MSG_HEADER_LEN);
 			evbuffer_remove(input, msg.data, msg.header.len);
 			handle_msg(bev, &msg);
+			readable_len = evbuffer_get_length(input);
+		} else {
+			break;
 		}
 	}
 }

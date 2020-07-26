@@ -32,16 +32,19 @@ std::unordered_map<int, Room*> rooms = {};
 
 void handle_msg(bufferevent* bev, Client* client, Msg* msg)
 {
+	auto output = bufferevent_get_output(bev);
 	switch (msg->header.type) {		
 	case MsgType::login:
 	{
 		client->name.assign(msg->data, msg->header.len);
-		Msg msg;
-		msg.header.type = MsgType::login_result;
+		client_name_map[client->name] = client;
+		printf("client #%d %s logged in\n", client->fd, client->name.c_str());
+		Msg msg_resp;
+		msg_resp.header.type = MsgType::login_result;
 		bool result = true;
-		msg.header.len = sizeof(result);
-		evbuffer_add(bufferevent_get_output(bev), &msg.header, MSG_HEADER_LEN);
-		evbuffer_add(bufferevent_get_output(bev), &result, msg.header.len);
+		msg_resp.header.len = sizeof(result);
+		evbuffer_add(output, &msg_resp.header, MSG_HEADER_LEN);
+		evbuffer_add(output, &result, msg_resp.header.len);
 		break;
 	}
 	
@@ -86,6 +89,9 @@ void readcb(struct bufferevent* bev, void* user_data)
 			evbuffer_drain(input, MSG_HEADER_LEN);
 			evbuffer_remove(input, msg.data, msg.header.len);
 			handle_msg(bev, me, &msg);
+			readable_len = evbuffer_get_length(input);
+		} else {
+			break;
 		}
 	}	
 }
@@ -138,20 +144,20 @@ void accept_cb(evconnlistener* listener, evutil_socket_t fd, sockaddr* addr, int
 		return;
 	}
 
+	auto client = new Client();
+	client->fd = fd;
+	client->bev = bev;
+	bufferevent_setcb(bev, readcb, nullptr, eventcb, client);
+	bufferevent_enable(bev, EV_READ | EV_WRITE);
+
 	char buf[64];
 	sprintf(buf, "Welcome #%d!\n", fd);
 	Msg msg;
 	msg.header.len = strlen(buf);
 	msg.header.type = MsgType::msg;
-	evbuffer_add(bufferevent_get_output(bev), &msg.header, MSG_HEADER_LEN);
-	evbuffer_add(bufferevent_get_output(bev), buf, msg.header.len);
-
-	auto client = new Client();
-	client->fd = fd;
-	client->bev = bev;
-	bufferevent_setcb(bev, readcb, nullptr, eventcb, client);
-	bufferevent_enable(bev, EV_READ);
-
+	auto output = bufferevent_get_output(bev);
+	evbuffer_add(output, &msg.header, MSG_HEADER_LEN);
+	evbuffer_add(output, buf, msg.header.len);
 	//evbuffer_add_buffer(bufferevent_get_output(bev), bufferevent_get_input(bev));
 
 }

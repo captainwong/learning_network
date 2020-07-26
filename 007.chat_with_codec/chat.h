@@ -30,6 +30,8 @@ enum class MsgType : uint32_t {
 	broadcast,
 	// 房间内广播
 	groupcast,
+	// 给某个用户发送消息
+	chat,
 };
 
 struct MsgHeader {
