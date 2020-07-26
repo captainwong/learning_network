@@ -1,4 +1,5 @@
 bin/
+obj/
 wechat_server.log*
 *.pb.h
 *.pb.cc
