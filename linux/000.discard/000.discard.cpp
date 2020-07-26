@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 		return print_error("epoll_ctl failed");
 	}
 
-	printf("%s listening on %s\n", argv[0], port);
+	printf("%s listening on %d\n", argv[0], port);
 	last_time_checked = std::chrono::steady_clock::now();
 
 	while (1) {
