@@ -99,10 +99,11 @@ int main(int argc, char** argv)
 		return ret;
 	}
 
+	int port = 10009;
 	sockaddr_in addr = { 0 };
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(10009);
+	addr.sin_port = htons(port);
 
 	ret = bind(listenfd, (sockaddr*)&addr, sizeof(addr));
 	if (ret < 0) {
@@ -127,6 +128,7 @@ int main(int argc, char** argv)
 		return print_error("epoll_ctl failed");
 	}
 
+	printf("%s listening on %s\n", argv[0], port);
 	last_time_checked = std::chrono::steady_clock::now();
 
 	while (1) {
