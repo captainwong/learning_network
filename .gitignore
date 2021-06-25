@@ -60,5 +60,7 @@ build/
 *.ilk
 *.exe.recipe
 *.vcxproj.CopyComplete
+*.vcxproj.FileListAbsolute.txt
 *.txt
+
 
