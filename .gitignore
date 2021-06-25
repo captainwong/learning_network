@@ -8,6 +8,11 @@ test_grpc
 tools/wechat_server
 *.tmp
 wechat_server/obj/
+Win32/
+x64/
+Debug/
+Release/
+
 
 ipch/
 
@@ -33,6 +38,7 @@ parse_test
 *.db
 *.opendb
 *.pdb
+*.ipdb
 *.exe
 *.dll
 http_server/Debug/
@@ -42,16 +48,17 @@ http_server/obj/
 build/
 *.o
 .vs/
-
 *.suo
 *.out
 *.tlog
 *.log
 *.lastbuildstate
 *.obj
+*.iobj
 *.pch
 *.idb
 *.ilk
-
-
+*.exe.recipe
+*.vcxproj.CopyComplete
+*.txt
 
