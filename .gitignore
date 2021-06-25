@@ -1,5 +1,5 @@
-bin/
-obj/
+*/bin/
+*/obj/
 wechat_server.log*
 *.pb.h
 *.pb.cc
@@ -9,9 +9,9 @@ tools/wechat_server
 *.tmp
 wechat_server/obj/
 Win32/
-x64/
-Debug/
-Release/
+*/x64/
+*/Debug/
+*/Release/
 
 
 ipch/

@@ -1,1 +1,0 @@
-D:\learning_network\utils\wake_on_lan\x64\Debug\wake_on_lan.vcxproj.CopyComplete
