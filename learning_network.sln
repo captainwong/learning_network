@@ -37,6 +37,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "007.chat_with_codec_client"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "000.discard", "linux\000.discard\000.discard.vcxproj", "{BF05628C-9E87-444E-A5AC-EA3F365134CE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{DDCEB6F1-4D6F-4760-98CB-97D724559859}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{6F82B6FB-F9E4-4622-90E2-CA75989A478A}"
+	ProjectSection(SolutionItems) = preProject
+		common\socket.c = common\socket.c
+		common\socket.h = common\socket.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcp_proxy", "utils\tcp_proxy\tcp_proxy.vcxproj", "{734D09FF-2B98-4439-A532-1C2B11B082AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -229,6 +239,18 @@ Global
 		{BF05628C-9E87-444E-A5AC-EA3F365134CE}.Release|x86.ActiveCfg = Release|x86
 		{BF05628C-9E87-444E-A5AC-EA3F365134CE}.Release|x86.Build.0 = Release|x86
 		{BF05628C-9E87-444E-A5AC-EA3F365134CE}.Release|x86.Deploy.0 = Release|x86
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|ARM.ActiveCfg = Debug|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|x64.ActiveCfg = Debug|x64
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|x64.Build.0 = Debug|x64
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|x86.ActiveCfg = Debug|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Debug|x86.Build.0 = Debug|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|ARM.ActiveCfg = Release|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|ARM64.ActiveCfg = Release|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|x64.ActiveCfg = Release|x64
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|x64.Build.0 = Release|x64
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|x86.ActiveCfg = Release|Win32
+		{734D09FF-2B98-4439-A532-1C2B11B082AB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -248,6 +270,7 @@ Global
 		{6859E311-E7FD-41B0-A7FB-056F1FB76280} = {0F3609ED-AFAF-44B3-BDF0-667E90AF3AF0}
 		{08006F22-2FBD-42C6-831F-A211A32F7835} = {0F3609ED-AFAF-44B3-BDF0-667E90AF3AF0}
 		{BF05628C-9E87-444E-A5AC-EA3F365134CE} = {7D59E32B-8FFE-47E0-BBF9-4A73088901E8}
+		{734D09FF-2B98-4439-A532-1C2B11B082AB} = {DDCEB6F1-4D6F-4760-98CB-97D724559859}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4F61815-7169-40DA-9A3F-5FD9B88D1897}

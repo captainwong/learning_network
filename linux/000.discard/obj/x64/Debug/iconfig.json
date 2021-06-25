@@ -2,7 +2,6 @@
   "host_identifier": "-2108636259",
   "predefines": {
     "cpp_compiler": "g++",
-    "c_compiler": "g++",
     "cpp_compiler_defines": {
       "__SSP_STRONG__": "3",
       "__DBL_MIN_EXP__": "(-1021)",
@@ -283,6 +282,7 @@
     },
     "cpp_user_defines": {},
     "cpp_user_undefines": [],
+    "c_compiler": "g++",
     "c_compiler_defines": {
       "__SSP_STRONG__": "3",
       "__DBL_MIN_EXP__": "(-1021)",

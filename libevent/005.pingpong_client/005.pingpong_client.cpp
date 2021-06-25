@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 	}
 	session_count = atoi(argv[3]);
 	if (session_count <= 0) {
-		puts("Invalid port");
+		puts("Invalid session_count");
 		return 1;
 	}
 	block_size = atoi(argv[4]);
